@@ -1,61 +1,16 @@
-function random(min: number, max: number) {
-  return Math.random() * (max - min) + min;
-}
-
-function createRadialGradient(id: number, color: string) {
-  const fx = random(0, 0.5).toFixed(18);
-  const fy = 0.5;
-  return `
-    <radialGradient id="rg${id}" fx="${fx}" fy="${fy}">
-      <stop offset="0%" stop-color="${color}" />
-      <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
-    </radialGradient>
-  `;
-}
-
-function createRect(gradientId: number) {
-  const scaleX = random(0.7, 1.5).toFixed(3);
-  const scaleY = random(0.7, 1.5).toFixed(3);
-  const skewX = random(-10, 10).toFixed(2);
-  const rotate = random(0, 360).toFixed(2);
-  const tx = random(-200, 200).toFixed(2);
-  const ty = random(-200, 200).toFixed(2);
-  return `
-    <rect x="0" y="0" width="100%" height="100%" class="rect rect${gradientId}"
-      transform="translate(300 300) scale(${scaleX} ${scaleY}) skewX(${skewX}) rotate(${rotate}) translate(${tx} ${ty}) translate(-300 -300)"/>
-  `;
-}
-
-function generateRandomSVG(colors: string[]): string {
-  const gradients: string[] = [];
-  const rects: string[] = [];
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < colors.length; j++) {
-      const color = colors[j];
-      gradients.push(createRadialGradient(j, color));
-      rects.push(createRect(j));
-    }
-  }
-  return `
-  <svg width="600" height="400" viewBox="0 0 600 600" style="width:100%;max-width:600px;height:auto;filter:saturate(125%);-webkit-filter:saturate(125%)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid slice">
-    <defs>
-      <style>
-        #bg {fill:#5135FF}
-        ${colors.map((_, index) => `.rect${index} {fill:url(#rg${index})}`).join('')}
-      </style>
-      ${gradients.join("\n")}
-    </defs>
-    <rect id="bg" x="0" y="0" width="100%" height="100%"/>
-    ${rects.join("\n")}
-  </svg>
-  `;
-}
+import { generateRandomSVG } from '@/lib/services/gradientGenerator';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const colorsParam = url.searchParams.get('colors');
-  const colors = colorsParam ? colorsParam.split(',') : ["#5135FF", "#FF5828", "#F69CFF", "#FFA50F"]; // Default colors
-  const svgString = generateRandomSVG(colors);
+  const widthParam = url.searchParams.get('width');
+  const heightParam = url.searchParams.get('height');
+  
+  const colors = colorsParam ? colorsParam.split(',') : ["#5135FF", "#FF5828", "#F69CFF", "#FFA50F"];
+  const width = widthParam ? parseInt(widthParam) : 600;
+  const height = heightParam ? parseInt(heightParam) : 400;
+  
+  const svgString = generateRandomSVG({ colors, width, height });
   return new Response(svgString, {
     headers: {
       "Content-Type": "image/svg+xml; charset=utf-8",
