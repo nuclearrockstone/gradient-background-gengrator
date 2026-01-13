@@ -26,13 +26,12 @@ function createRect(gradientId: number) {
   `;
 }
 
-function generateRandomSVG(): string {
-  const colors = ["#5135FF", "#FF5828", "#F69CFF", "#FFA50F"];
+function generateRandomSVG(colors: string[]): string {
   const gradients: string[] = [];
   const rects: string[] = [];
   for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 4; j++) {
-        const color = colors[j];
+    for (let j = 0; j < colors.length; j++) {
+      const color = colors[j];
       gradients.push(createRadialGradient(j, color));
       rects.push(createRect(j));
     }
@@ -42,7 +41,7 @@ function generateRandomSVG(): string {
     <defs>
       <style>
         #bg {fill:#5135FF}
-        .rect0 {fill:url(#rg0)}.rect1 {fill:url(#rg1)}.rect2 {fill:url(#rg2)}.rect3 {fill:url(#rg3)}
+        ${colors.map((_, index) => `.rect${index} {fill:url(#rg${index})}`).join('')}
       </style>
       ${gradients.join("\n")}
     </defs>
@@ -52,8 +51,11 @@ function generateRandomSVG(): string {
   `;
 }
 
-export async function GET() {
-  const svgString = generateRandomSVG();
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const colorsParam = url.searchParams.get('colors');
+  const colors = colorsParam ? colorsParam.split(',') : ["#5135FF", "#FF5828", "#F69CFF", "#FFA50F"]; // Default colors
+  const svgString = generateRandomSVG(colors);
   return new Response(svgString, {
     headers: {
       "Content-Type": "image/svg+xml; charset=utf-8",
