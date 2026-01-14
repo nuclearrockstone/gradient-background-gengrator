@@ -46,7 +46,7 @@ export function generateRandomSVG({ colors, width = 600, height = 400 }: Gradien
   <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" style="width:100%;max-width:${width}px;height:auto;filter:saturate(125%);-webkit-filter:saturate(125%)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid slice">
     <defs>
       <style>
-        #bg {fill:#5135FF}
+        #bg {fill:${colors[0]}}
         ${colors.map((_, index) => `.rect${index} {fill:url(#rg${index})}`).join('')}
       </style>
       ${gradients.join("\n")}

@@ -54,25 +54,28 @@ const applyPreset = (preset: typeof colorPresets[0]) => {
   };
 
   const generateApiLink = () => {
-    const baseUrl = typeof window !== 'undefined' 
+    const baseUrl = typeof window !== 'undefined'
       ? `${window.location.origin}/api`
       : '/api';
-    const params = new URLSearchParams({
-      colors: colors.join(','),
-      width: width.toString(),
-      height: height.toString()
-    });
+    const params = new URLSearchParams();
+    colors.forEach(color => params.append('color', color));
+    params.append('width', width.toString());
+    params.append('height', height.toString());
     return `${baseUrl}?${params.toString()}`;
   };
 
   const copyApiLink = async () => {
-    const apiLink = generateApiLink();
-    try {
-      await navigator.clipboard.writeText(apiLink);
-      setApiLinkCopied(true);
-      setTimeout(() => setApiLinkCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy API link:', err);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        const apiLink = generateApiLink();
+        await navigator.clipboard.writeText(apiLink);
+        setApiLinkCopied(true);
+        setTimeout(() => setApiLinkCopied(false), 2000);
+      } catch (err) {
+        console.error('Failed to copy API link:', err);
+      }
+    } else {
+      alert('Clipboard API not supported in this browser. Please manually copy the link.');
     }
   };
 
@@ -270,7 +273,7 @@ const applyPreset = (preset: typeof colorPresets[0]) => {
               <div className="text-xs text-muted-foreground">
                 <p>Use this API endpoint to generate gradients with the current parameters:</p>
                 <ul className="mt-1 space-y-1 ml-4">
-                  <li>• <code className="bg-muted px-1 rounded">colors</code>: Comma-separated hex colors</li>
+                  <li>• <code className="bg-muted px-1 rounded">color</code>: Hex color (can be used multiple times)</li>
                   <li>• <code className="bg-muted px-1 rounded">width</code>: Image width in pixels</li>
                   <li>• <code className="bg-muted px-1 rounded">height</code>: Image height in pixels</li>
                 </ul>
