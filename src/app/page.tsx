@@ -91,84 +91,91 @@ export default function GradientGenerator() {
           </Card>
 
           {/* Controls Section */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             {/* Dimensions */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Dimensions</CardTitle>
+            <Card className="shadow-sm">
+              <CardHeader className="pb-2 pt-4">
+                <CardTitle className="text-base">Dimensions</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium">Width</label>
-                  <Input
-                    type="number"
-                    value={width}
-                    onChange={(e) => setWidth(Number(e.target.value))}
-                    min="100"
-                    max="2000"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium">Height</label>
-                  <Input
-                    type="number"
-                    value={height}
-                    onChange={(e) => setHeight(Number(e.target.value))}
-                    min="100"
-                    max="2000"
-                  />
+              <CardContent className="space-y-3 pb-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-medium mb-1 block">Width</label>
+                    <Input
+                      type="number"
+                      value={width}
+                      onChange={(e) => setWidth(Number(e.target.value))}
+                      min="100"
+                      max="2000"
+                      className="h-8 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium mb-1 block">Height</label>
+                    <Input
+                      type="number"
+                      value={height}
+                      onChange={(e) => setHeight(Number(e.target.value))}
+                      min="100"
+                      max="2000"
+                      className="h-8 text-sm"
+                    />
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Color Controls */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Colors</CardTitle>
+{/* Color Controls */}
+            <Card className="shadow-sm">
+              <CardHeader className="pb-2 pt-4">
+                <CardTitle className="text-base">Colors</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-2 pb-4">
                 {colors.map((color, index) => (
-                  <div key={index} className="flex items-center gap-2">
+                  <div key={index} className="flex items-center gap-1.5">
                     <Input
                       type="color"
                       value={color}
                       onChange={(e) => handleColorChange(index, e.target.value)}
-                      className="w-16 h-10 p-0"
+                      className="w-10 h-7 p-0 rounded"
                     />
                     <Input
                       type="text"
                       value={color}
                       onChange={(e) => handleColorChange(index, e.target.value)}
                       placeholder="#000000"
+                      className="text-xs h-7 px-2"
                     />
                     {colors.length > 1 && (
                       <Button
                         onClick={() => removeColor(index)}
                         variant="outline"
                         size="icon"
+                        className="h-7 w-7 hover:bg-red-50 hover:border-red-200"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3 h-3" />
                       </Button>
                     )}
                   </div>
                 ))}
                 
                 {colors.length < 8 && (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5">
                     <Input
                       type="color"
                       value={newColor}
                       onChange={(e) => setNewColor(e.target.value)}
-                      className="w-16 h-10 p-0"
+                      className="w-10 h-7 p-0 rounded"
                     />
                     <Input
                       type="text"
                       value={newColor}
                       onChange={(e) => setNewColor(e.target.value)}
                       placeholder="#000000"
+                      className="text-xs h-7 px-2"
                     />
-                    <Button onClick={addColor} disabled={!newColor}>
-                      <Plus className="w-4 h-4 mr-2" />
+                    <Button onClick={addColor} disabled={!newColor} size="sm" className="h-7 text-xs px-2">
+                      <Plus className="w-3 h-3 mr-1" />
                       Add
                     </Button>
                   </div>
@@ -177,27 +184,27 @@ export default function GradientGenerator() {
             </Card>
 
             {/* Presets */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Preset Templates</CardTitle>
+            <Card className="shadow-sm">
+              <CardHeader className="pb-2 pt-4">
+                <CardTitle className="text-base">Preset Templates</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-2">
+              <CardContent className="pb-4">
+                <div className="grid grid-cols-3 gap-1.5">
                   {colorPresets.map((preset) => (
                     <Button
                       key={preset.name}
                       onClick={() => applyPreset(preset)}
                       variant="outline"
-                      className="h-auto p-3 flex flex-col items-start"
+                      className="h-auto p-2 flex flex-col items-center justify-center space-y-1 hover:border-primary/50"
                     >
-                      <div className="w-full mb-2">
+                      <div className="text-xs font-medium text-center">
                         {preset.name}
                       </div>
-                      <div className="flex gap-1">
+                      <div className="flex gap-0.5">
                         {preset.colors.slice(0, 4).map((color, i) => (
                           <div
                             key={i}
-                            className="w-4 h-4 rounded"
+                            className="w-3 h-3 rounded-sm"
                             style={{ backgroundColor: color }}
                           />
                         ))}
