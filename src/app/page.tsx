@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useGradientGenerator } from '@/hooks/useGradientGenerator';
 import { colorPresets } from '@/lib/constants';
-import { Download, RefreshCw, Plus, Trash2 } from 'lucide-react';
+import { Download, RefreshCw, Plus, Trash2, Copy, Link } from 'lucide-react';
 
 export default function GradientGenerator() {
   const {
@@ -23,6 +23,7 @@ export default function GradientGenerator() {
   } = useGradientGenerator();
 
   const [newColor, setNewColor] = useState('');
+  const [apiLinkCopied, setApiLinkCopied] = useState(false);
 
   useEffect(() => {
     generateGradient();
@@ -48,8 +49,31 @@ export default function GradientGenerator() {
     }
   };
 
-  const applyPreset = (preset: typeof colorPresets[0]) => {
+const applyPreset = (preset: typeof colorPresets[0]) => {
     setColors(preset.colors);
+  };
+
+  const generateApiLink = () => {
+    const baseUrl = typeof window !== 'undefined' 
+      ? `${window.location.origin}/api`
+      : '/api';
+    const params = new URLSearchParams({
+      colors: colors.join(','),
+      width: width.toString(),
+      height: height.toString()
+    });
+    return `${baseUrl}?${params.toString()}`;
+  };
+
+  const copyApiLink = async () => {
+    const apiLink = generateApiLink();
+    try {
+      await navigator.clipboard.writeText(apiLink);
+      setApiLinkCopied(true);
+      setTimeout(() => setApiLinkCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy API link:', err);
+    }
   };
 
   return (
@@ -214,8 +238,46 @@ export default function GradientGenerator() {
                 </div>
               </CardContent>
             </Card>
-          </div>
+</div>
         </div>
+
+        {/* API Link Section */}
+        <Card className="mt-6 shadow-sm">
+          <CardHeader className="pb-3 pt-4">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Link className="w-4 h-4" />
+              Developer API Link
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pb-4">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="flex-1">
+                  <div className="bg-muted/50 border rounded-md p-3 font-mono text-xs break-all">
+                    {generateApiLink()}
+                  </div>
+                </div>
+                <Button
+                  onClick={copyApiLink}
+                  variant="outline"
+                  size="sm"
+                  className="h-8 px-2 flex items-center gap-1"
+                >
+                  <Copy className="w-3 h-3" />
+                  {apiLinkCopied ? 'Copied!' : 'Copy'}
+                </Button>
+              </div>
+              <div className="text-xs text-muted-foreground">
+                <p>Use this API endpoint to generate gradients with the current parameters:</p>
+                <ul className="mt-1 space-y-1 ml-4">
+                  <li>• <code className="bg-muted px-1 rounded">colors</code>: Comma-separated hex colors</li>
+                  <li>• <code className="bg-muted px-1 rounded">width</code>: Image width in pixels</li>
+                  <li>• <code className="bg-muted px-1 rounded">height</code>: Image height in pixels</li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
