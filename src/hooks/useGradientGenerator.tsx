@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { generateRandomSVG } from '@/lib/services/gradientGenerator';
+import { colorToParam } from '@/lib/utils';
 
 export function useGradientGenerator() {
   const [colors, setColors] = useState<string[]>(['#5135FF', '#FF5828', '#F69CFF', '#FFA50F']);
@@ -11,7 +12,12 @@ export function useGradientGenerator() {
   const generateGradient = useCallback(async () => {
     setIsGenerating(true);
     try {
-      const svg = generateRandomSVG({ colors, width, height });
+      const params = new URLSearchParams();
+      colors.forEach(color => params.append('colors', colorToParam(color)));
+      params.append('width', width.toString());
+      params.append('height', height.toString());
+      const response = await fetch(`/api?${params.toString()}`);
+      const svg = await response.text();
       setSvgContent(svg);
     } catch (error) {
       console.error('Error generating gradient:', error);
