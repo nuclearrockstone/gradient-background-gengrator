@@ -1,6 +1,15 @@
-# OpenNext Starter
+# Gradient Background Generator
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+A powerful Next.js application for creating stunning SVG gradient backgrounds with real-time preview and customizable color palettes.
+
+## Features
+
+- **Real-time Preview**: See your gradient backgrounds update instantly as you modify colors
+- **Custom Color Palettes**: Add up to 8 colors to create unique gradients
+- **Preset Templates**: Choose from professionally designed color combinations
+- **API Integration**: Generate gradients programmatically via REST API
+- **SVG Export**: Download your creations as high-quality SVG files
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
 
 ## Getting Started
 
@@ -36,6 +45,27 @@ Deploy the application to Cloudflare:
 npm run deploy
 # or similar package manager command
 ```
+
+## Custom Domain
+
+The deployed application is available at:
+
+**gbg.nuclearrockstone.xyz**
+
+Configure your DNS and Cloudflare settings accordingly (add the appropriate CNAME/A records and route the domain to your Cloudflare deployment).
+
+## API Usage
+
+Generate gradients programmatically using the REST API:
+
+```
+GET https://gbg.nuclearrockstone.xyz/api?colors=hex_FF0000&colors=hex_00FF00&width=800&height=600
+```
+
+### Parameters:
+- `colors`: Hex colors with `hex_` prefix (e.g., `hex_FF0000` for red)
+- `width`: Image width in pixels (100-2000)
+- `height`: Image height in pixels (100-2000)
 
 ## Learn More
 
