@@ -240,6 +240,7 @@ body {
 .card-stagger-2 { animation-delay: 0.2s; }
 .card-stagger-3 { animation-delay: 0.3s; }
 .card-stagger-4 { animation-delay: 0.4s; }
+.card-stagger-5 { animation-delay: 0.5s; }
 
 /* Glow effects */
 .glow {
