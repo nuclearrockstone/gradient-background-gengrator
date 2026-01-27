@@ -43,16 +43,22 @@ export function generateRandomSVG({ colors, width = 600, height = 400 }: Gradien
     }
   }
   return `
-  <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" style="width:100%;max-width:${width}px;height:auto;filter:saturate(125%);-webkit-filter:saturate(125%)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid slice">
+  <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet">
     <defs>
+      <clipPath id="clip">
+        <rect width="${width}" height="${height}" />
+      </clipPath>
       <style>
         #bg {fill:${colors[0]}}
         ${colors.map((_, index) => `.rect${index} {fill:url(#rg${index})}`).join('')}
       </style>
       ${gradients.join("\n")}
     </defs>
-    <rect id="bg" x="0" y="0" width="100%" height="100%"/>
-    ${rects.join("\n")}
+    <g clip-path="url(#clip)">
+      <rect id="bg" x="0" y="0" width="100%" height="100%"/>
+      ${rects.join("\n")}
+    </g>
   </svg>
   `;
+
 }

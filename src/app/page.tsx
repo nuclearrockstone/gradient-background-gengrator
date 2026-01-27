@@ -108,7 +108,7 @@ export default function GradientGenerator() {
                 {svgContent ? (
                   <div 
                     dangerouslySetInnerHTML={{ __html: svgContent }}
-                    className="w-full h-full transform transition-transform duration-500 hover:scale-[1.01]"
+                    className="w-full h-full transform transition-transform duration-500 hover:scale-[1.01] [&>svg]:w-full [&>svg]:h-full"
                   />
                 ) : (
                   <div className="flex flex-col items-center gap-3 text-muted-foreground">
